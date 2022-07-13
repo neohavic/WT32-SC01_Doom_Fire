@@ -8,6 +8,7 @@
  *TO-DO:
  *
  * - Performance enhancements
+ * - Add multitask support
  * - Add touch to control wind direction
  *
  ************************************************************************************/
@@ -190,6 +191,7 @@ void drawFlames(uint8_t *ptrMatrix, uint32_t rows, uint32_t cols, uint32_t pixel
 
   // Display FPS
     img.setCursor(10, 10);
+    img.print("FPS: ");
     img.printf("%.4f", fps);
 
     // Calculate FPS
@@ -232,21 +234,11 @@ void calculateFirePropagation(uint8_t *ptrMatrix, uint32_t rows, uint32_t cols, 
   {
     for (rowCounter = 0; rowCounter < rows - 1; rowCounter++) // In each line
     {
-      float random1 = (float)fast_rand()/32767; // Calculate a random number  between 0-1
-      //float random2 = (float)rand()/0xFFFFFFFF; // Calculate a random number  between 0-1
-    
-    //Serial.print (random1);
-    //Serial.print(" ");
-    //Serial.print (random2);  
-    //Serial.print("\n");
-    
+      float random = (float)rand()/0xFFFFFFFF; // Calculate a random number  between 0-
+      int32_t decay = (int32_t)(random * randAtt); // Calculate decay
 
-      int32_t decay = (int32_t)(random1 * randAtt); // Calculate decay
-
-      /*
-      * Calculate the current index considering the randomness
-      */
-      currentIndex = rowCounter*cols + colCounter + (int32_t)(random1 * wind);
+      // Calculate the current index considering the randomness 
+      currentIndex = rowCounter*cols + colCounter + (int32_t)(random * wind);
 
       // Avoid exiting the matrix
       if (currentIndex < 0) 
